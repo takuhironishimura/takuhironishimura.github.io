@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How I got here — Takuhiro Nishimura</title>
+<meta name="description" content="Why I work on the gap between what we know about learning and how people are actually taught.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eae7dd;
+    --card:#fffefb;
+    --ink:#14150f;
+    --ink-soft:#43453d;
+    --ink-faint:#8b8d84;
+    --rule:#ddd9cd;
+    --gold:#c98a2e;
+    --deep:#0f100c;
+    --max:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3",-apple-system,BlinkMacSystemFont,sans-serif;
+    font-size:17px;line-height:1.72;-webkit-font-smoothing:antialiased;}
+  a{color:var(--gold);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 30px;}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  /* ---- top bar ---- */
+  .bar{position:sticky;top:0;z-index:20;background:rgba(234,231,221,.9);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);}
+  .bar-in{max-width:var(--max);margin:0 auto;padding:12px 30px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;}
+  .bar a{color:var(--ink-soft);}
+  .bar a:hover{color:var(--gold);text-decoration:none;}
+  .bar .back i{font-style:normal;display:inline-block;transition:transform .25s;}
+  .bar .back:hover i{transform:translateX(-4px);}
+
+  /* ---- hero ---- */
+  header{padding:70px 0 0;}
+  .kicker{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);margin:0 0 20px;}
+  h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+    font-size:clamp(38px,6vw,62px);line-height:1.02;margin:0 0 24px;letter-spacing:-0.024em;}
+  .standfirst{font-size:20px;line-height:1.6;color:var(--ink-soft);margin:0;}
+  .standfirst b{color:var(--ink);font-weight:600;}
+
+  /* ---- body ---- */
+  article{
+    background:var(--card);border:1px solid var(--rule);border-radius:14px;
+    padding:46px 52px;margin:44px 0 0;
+  }
+  article p{margin:0 0 20px;color:var(--ink-soft);font-size:18.4px;line-height:1.78;}
+  article p:last-child{margin-bottom:0;}
+  article p .em{color:var(--ink);font-weight:600;}
+  .drop::first-letter{font-family:"Instrument Serif",Georgia,serif;font-size:66px;
+    line-height:.78;float:left;padding:8px 13px 0 0;color:var(--gold);}
+
+  h2{font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:500;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+    margin:44px 0 18px;display:flex;align-items:center;gap:14px;}
+  h2::after{content:"";flex:1;height:1px;background:var(--rule);}
+  h2:first-child{margin-top:0;}
+
+  .pull{
+    margin:36px 0;padding:26px 30px;background:var(--bg);
+    border-left:3px solid var(--gold);border-radius:0 8px 8px 0;
+    font-family:"Instrument Serif",Georgia,serif;font-size:25px;line-height:1.36;
+    letter-spacing:-0.014em;color:var(--ink);
+  }
+  .pull em{font-style:italic;color:var(--gold);}
+
+  .facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:34px 0;}
+  .fact{background:var(--bg);border-radius:10px;padding:18px 20px;}
+  .fact span{display:block;font-family:"JetBrains Mono",monospace;font-size:9px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:7px;}
+  .fact b{display:block;font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+    font-size:30px;line-height:.98;letter-spacing:-0.028em;color:var(--gold);}
+  .fact i{font-style:normal;font-size:13px;color:var(--ink-soft);display:block;margin-top:6px;}
+
+  .cta{display:inline-block;margin:18px 10px 0 0;padding:13px 24px;
+    border:1px solid var(--rule);border-radius:99px;color:var(--ink);background:var(--card);
+    font-family:"JetBrains Mono",monospace;font-size:13px;letter-spacing:.01em;transition:.22s;}
+  .cta:hover{background:var(--ink);color:var(--card);border-color:var(--ink);text-decoration:none;}
+
+  footer{padding:36px 0 84px;margin-top:34px;border-top:1px solid var(--rule);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);}
+
+  .rv{opacity:0;transform:translateY(16px);
+    transition:opacity .6s ease,transform .6s cubic-bezier(.22,1,.36,1);}
+  .rv.in{opacity:1;transform:none;}
+
+  @media (max-width:760px){
+    .wrap{padding:0 20px;}
+    .bar-in{padding:12px 20px;}
+    header{padding:44px 0 0;}
+    .standfirst{font-size:18px;}
+    article{padding:28px 24px;margin-top:30px;}
+    article p{font-size:17.4px;line-height:1.74;}
+    .pull{font-size:21px;padding:22px 22px;margin:28px 0;}
+    .facts{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+    .rv{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <a class="back" href="design-g5-cover-boxed.html"><i>←</i> &nbsp;Takuhiro Nishimura — Portfolio</a>
+    <span>The longer version</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <p class="kicker">About · the longer version</p>
+    <h1>How I got here</h1>
+    <p class="standfirst">
+      Why I became interested in the intersection of brain research and education.
+      <b>It stems from six years of playing baseball.</b>
+    </p>
+  </header>
+
+  <article class="rv">
+
+    <h2>The worst player on the team</h2>
+    <p class="drop">
+      I was the only person in my baseball club who had started playing in middle school. Everyone
+      else had been playing since they were six or seven. That difference is not small, and it does
+      not close quickly — I was the worst player on the team, and it was obvious to everyone,
+      including me.
+    </p>
+    <p>
+      Our coach was frightening, and I was the one who got shouted at. I had joined because I
+      wanted to play. Within a few months I had stopped wanting anything at all. I kept turning up,
+      but only because leaving would have been worse.
+    </p>
+
+    <h2>What the lockdown gave back</h2>
+    <p>
+      Then COVID cancelled practice. My first reaction was relief — I finally did not have to go.
+    </p>
+    <p>
+      But with the schedule gone, and nothing to fill it with, I ended up watching professional
+      baseball for hours a day. Not out of duty. Because I wanted to.
+      <span class="em">That was when I realised I still liked this sport, and that I had joined for
+      one reason: I wanted to get good at it.</span> Being bad had made me forget that.
+    </p>
+    <p>
+      I bought a bat and started practising on my own. From that point until I finished high school
+      baseball I did not skip a day — at least two hours, two hundred swings, every night.
+    </p>
+
+    <h2>The body that would not follow instructions</h2>
+    <p>
+      I did get better. But not nearly as much better as the hours should have bought me. And the
+      way I failed was strange enough that I could not stop thinking about it.
+    </p>
+    <p>
+      A coach would give a teammate an instruction, and the teammate would simply do it — the
+      correction appeared in their body almost immediately. I would receive the same instruction,
+      execute what I was certain was the same correction, and then watch the video.
+      <span class="em">My body had not done what I told it to do, and it had not felt like
+      anything was wrong.</span>
+    </p>
+    <p>
+      That is a strange experience to have about yourself. It is not laziness and it is not
+      misunderstanding the instruction — it is a failure of translation between an intention and a
+      movement, and you cannot detect it from the inside. Later I learned that researchers study
+      exactly this, and that when a motor skill is first acquired appears to matter a great deal.
+      Starting at twelve is not the same as starting at six.
+    </p>
+    <p>
+      That is where the brain stopped being a school subject for me. Not a class, not a book — a
+      video of myself failing to do what I was sure I was doing.
+    </p>
+
+    <h2>Two things at once</h2>
+    <p>
+      I was never the reason we won. But I was on the team the year we reached the metropolitan
+      tournament — the school's best result in five years.
+    </p>
+    <p>
+      Meanwhile there was the other problem: baseball had taken all of my time, and I still
+      intended to do well academically. I could not afford to study inefficiently, because there
+      were not enough hours left to be inefficient with. So I did the only thing available and
+      started reading — books and papers on how learning actually works, then rebuilding how I
+      studied around what I found.
+    </p>
+    <p>
+      The difference was not subtle. Same person, roughly the same hours, a completely different
+      return. I finished 2nd out of 400 students.
+    </p>
+
+    <div class="facts">
+      <div class="fact"><span>Baseball</span><b>Metro</b><i>tournament — the school's best in five years</i></div>
+      <div class="fact"><span>Academics</span><b>2 / 400</b><i>over the same stretch</i></div>
+      <div class="fact"><span>Practice swings</span><b>200</b><i>a night, never skipped</i></div>
+    </div>
+
+    <p>
+      Two experiments, run at the same time on the same person. In one, effort alone did not
+      transfer into the movement I wanted. In the other, changing the method changed the result
+      almost immediately. <span class="em">I had not become smarter. I had changed how I
+      learned.</span>
+    </p>
+
+    <h2>What follows from that</h2>
+    <p>
+      I only found that method because a scheduling problem forced me to look for one. Nobody
+      taught it to me; it was not part of school. Which means most students never have that
+      accident, and they are not less capable — they are simply working with a method nobody handed
+      them.
+    </p>
+
+    <p class="pull">
+      If method makes that much difference, then <em>access to a good method is itself a form of
+      inequality</em> — and it is invisible, because from the outside it looks like talent.
+    </p>
+
+    <p>
+      A school trip to the United States made that concrete for me. Not because American education
+      is better — it is different in ways I am still working out — but because seeing another
+      system up close made the one I grew up inside look like a choice rather than a fact. Travelling
+      in Cambodia pushed the same point much further. What a person ends up able to do depends
+      enormously on where they happened to be taught, and almost none of that is about them.
+    </p>
+
+    <h2>What I do about it</h2>
+    <p>
+      I chose Cognitive and Behavioral Neuroscience with a minor in Education Studies for a
+      specific reason: <span class="em">the science on one side, the practice on the other.</span>
+      The people who know what is true about learning and the people who decide what happens in a
+      classroom are largely different people, and they are not in the same room often enough.
+    </p>
+    <p>
+      So I try to keep a foot in both. Research work has taught me how slow and careful real
+      evidence is — how much of it is setting up a camera correctly and labelling video honestly,
+      long before anything gets claimed. Teaching has taught me the opposite lesson: a method that
+      is correct but unteachable is worth nothing, and most of the distance between research and
+      practice is not disagreement but translation.
+    </p>
+    <p>
+      Helping Japanese students find a route to studying abroad is the same problem in another
+      form. The route exists. The scholarships exist. What is missing is that almost nobody is told
+      they are there — which, again, ends up looking like ability.
+    </p>
+    <p style="font-size:15.6px;color:var(--ink-faint);">
+      Where and when I've done these things is on the
+      <a href="design-g5-cover-boxed.html#experience">portfolio page</a>; this one is about why.
+    </p>
+
+    <h2>Where I'd like to end up</h2>
+    <p>
+      My interest sits at the intersection of cognitive science and education. What I want to do is
+      apply research on the brain to how people are actually taught, and use it to raise the
+      quality of education — not for one classroom, but as broadly as I can reach.
+      <span class="em">Narrowing the gap in who gets access to a good education is the specific
+      version of that I care about most.</span>
+    </p>
+    <p>
+      More broadly, I'm interested in applying what we learn about the brain to society in general.
+      Education is the first place I want to take it, because it is where the leverage is largest
+      and where I have felt the difference myself. It is not where I intend to stop.
+    </p>
+    <p>
+      Concretely, that means psychology, neuroscience, developmental research, education, and
+      education technology — which sounds like five fields, but from where I stand it is one
+      question approached from five directions.
+    </p>
+  </article>
+
+  <p style="margin-top:6px;">
+    <a class="cta" href="design-g5-cover-boxed.html">← Back to portfolio</a>
+    <a class="cta" href="mailto:tanishimura@ucsd.edu">tanishimura@ucsd.edu</a>
+  </p>
+
+  <footer>
+    <span>© 2026 Takuhiro Nishimura</span>
+    <span>San Diego, CA · Tokyo, JP</span>
+  </footer>
+</div>
+
+<script>
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
+  },{rootMargin:'0px 0px -8% 0px',threshold:.03});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+} else { document.querySelectorAll('.rv').forEach(function(el){el.classList.add('in');}); }
+</script>
+</body>
+</html>

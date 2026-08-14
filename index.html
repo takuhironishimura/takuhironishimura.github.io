@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Takuhiro Nishimura</title>
+<meta name="description" content="Takuhiro Nishimura — Cognitive and Behavioral Neuroscience at UC San Diego. Bringing brain research into how people are actually taught.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#eae7dd;
+    --card:#fffefb;
+    --ink:#14150f;
+    --ink-soft:#43453d;
+    --ink-faint:#8b8d84;
+    --rule:#ddd9cd;
+    --gold:#c98a2e;
+    --deep:#0f100c;
+    --max:1000px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Source Sans 3",-apple-system,BlinkMacSystemFont,sans-serif;
+    font-size:17px;line-height:1.72;-webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--gold);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 32px;}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  /* ================= COVER ================= */
+  .cover{
+    position:relative;height:100svh;min-height:560px;width:100%;
+    overflow:hidden;background:var(--deep);
+    display:flex;flex-direction:column;justify-content:flex-end;
+  }
+  .cover img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    object-position:54% 18%;
+    filter:saturate(.78) contrast(1.06) brightness(.94);
+    transform:scale(1.01);
+    animation:drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes drift{from{transform:scale(1.01) translate3d(0,0,0)}
+                   to{transform:scale(1.045) translate3d(-.8%,-.5%,0)}}
+  .scrim{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(180deg,rgba(15,16,12,.6) 0%,rgba(15,16,12,.06) 26%,rgba(15,16,12,.5) 62%,rgba(15,16,12,.94) 100%),
+      linear-gradient(90deg,rgba(15,16,12,.55) 0%,rgba(15,16,12,0) 55%);
+  }
+  .cover-top{
+    position:absolute;top:0;left:0;right:0;padding:24px 32px;z-index:3;
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:rgba(255,255,255,.62);
+  }
+  .cover-top a{color:rgba(255,255,255,.62);}
+  .cover-top a:hover{color:#fff;}
+  .cover-in{position:relative;z-index:3;padding:0 32px 44px;max-width:1064px;margin:0 auto;width:100%;}
+  .eyebrow{
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);margin:0 0 18px;
+    opacity:0;animation:up .8s .15s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  .cover h1{
+    font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+    font-size:clamp(52px,9.4vw,124px);line-height:.87;margin:0 0 20px;
+    letter-spacing:-0.032em;color:#fff;
+    opacity:0;animation:up .95s .25s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  .cover h1 em{font-style:italic;display:block;color:#f0e4cd;}
+  .cover .tagline{
+    font-size:18px;line-height:1.5;color:rgba(255,255,255,.8);max-width:31em;margin:0;
+    opacity:0;animation:up .95s .38s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  @keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+  .cover-foot{
+    position:relative;z-index:3;border-top:1px solid rgba(255,255,255,.18);
+    margin:0 32px;padding:16px 0 22px;max-width:1000px;
+    display:flex;gap:34px;flex-wrap:wrap;align-items:center;
+    opacity:0;animation:up .9s .55s cubic-bezier(.22,1,.36,1) forwards;
+  }
+  @media (min-width:1064px){.cover-foot{margin:0 auto;}}
+  .kv{font-family:"JetBrains Mono",monospace;font-size:11px;color:rgba(255,255,255,.85);}
+  .kv span{display:block;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+    color:rgba(255,255,255,.45);margin-bottom:3px;}
+  .kv b.hot{color:var(--gold);}
+  .cue{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:9.5px;
+    letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.5);}
+  .cue i{display:inline-block;animation:bob 1.9s ease-in-out infinite;font-style:normal;}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+  /* caption strip under the photo */
+  .credit{
+    background:var(--deep);color:rgba(255,255,255,.45);
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;padding:11px 32px;text-align:center;
+  }
+
+  /* ================= content ================= */
+  main{padding-top:18px;}
+  section{padding:46px 0;}
+  section:first-of-type{padding-top:58px;}
+  .sec-grid{display:grid;grid-template-columns:184px 1fr;gap:32px;}
+  h2{
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:500;
+    letter-spacing:.17em;text-transform:uppercase;color:var(--gold);margin:0;
+    position:sticky;top:24px;align-self:start;
+  }
+  h2 b{display:block;font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+    font-size:28px;letter-spacing:-0.012em;color:var(--ink);text-transform:none;
+    margin-top:8px;line-height:1.08;}
+  p{margin:0 0 15px;color:var(--ink-soft);}
+  p:last-child{margin-bottom:0;}
+  .lead{max-width:35em;font-size:18.4px;line-height:1.78;}
+  .lead .em{color:var(--ink);font-weight:600;}
+
+  .drop::first-letter{
+    font-family:"Instrument Serif",Georgia,serif;font-size:66px;line-height:.8;
+    float:left;padding:6px 12px 0 0;color:var(--gold);
+  }
+
+  .entry-head{display:flex;justify-content:space-between;align-items:baseline;
+    gap:14px;flex-wrap:wrap;}
+  .entry h3{font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+    font-size:24px;margin:0 0 1px;line-height:1.2;letter-spacing:-0.012em;}
+  .when{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--gold);white-space:nowrap;}
+  .org{font-size:15.2px;color:var(--ink-faint);margin:0 0 11px;}
+  .entry ul{margin:0;padding-left:18px;color:var(--ink-soft);font-size:16.3px;line-height:1.7;}
+  .entry li{margin-bottom:7px;}
+  .entry li::marker{color:var(--gold);}
+
+  .meta{display:grid;grid-template-columns:134px 1fr;gap:16px 22px;font-size:16.3px;line-height:1.68;}
+  .meta dt{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);padding-top:5px;}
+  .meta dd{margin:0;color:var(--ink-soft);}
+  .meta dd strong{color:var(--gold);font-weight:600;}
+
+  ul.plain{margin:0;padding-left:0;list-style:none;color:var(--ink-soft);font-size:16.3px;line-height:1.68;}
+  ul.plain li{padding:13px 0;border-top:1px solid var(--rule);}
+  ul.plain li:first-child{border-top:none;padding-top:0;}
+  ul.plain li:last-child{padding-bottom:0;}
+  ul.plain li::marker{color:var(--gold);}
+  ul.plain b{color:var(--ink);font-weight:600;}
+
+  .cta{
+    display:inline-block;margin-top:16px;margin-right:10px;padding:12px 24px;
+    border:1px solid var(--rule);border-radius:99px;color:var(--ink);
+    font-family:"JetBrains Mono",monospace;font-size:13px;letter-spacing:.01em;
+    transition:.22s;
+  }
+  .cta:hover{background:var(--ink);color:var(--card);
+    border-color:var(--ink);text-decoration:none;}
+
+  footer{padding:34px 0 76px;margin-top:14px;border-top:1px solid var(--rule);
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);}
+
+
+
+  /* ================= boxed content ================= */
+  .box,
+  #about .sec-grid > div,
+  #contact .sec-grid > div,
+  .sec-grid > .meta,
+  .sec-grid > ul.plain{
+    background:var(--card);border:1px solid var(--rule);border-radius:13px;
+    padding:30px 32px;
+  }
+  .sec-grid > .meta{padding:28px 32px;}
+
+  /* 経歴は1件ずつカードに */
+  .entry{
+    background:var(--card);border:1px solid var(--rule);border-radius:13px;
+    padding:24px 28px;margin-bottom:12px;
+  }
+  .entry:last-child{margin-bottom:0;}
+
+
+  /* ---- projects ---- */
+  .proj{display:block;color:inherit;text-decoration:none;position:relative;
+    background:var(--card);border:1px solid var(--rule);border-radius:13px;
+    overflow:hidden;transition:transform .28s cubic-bezier(.22,1,.36,1),box-shadow .28s,border-color .28s;}
+  .proj:hover{text-decoration:none;transform:translateY(-2px);
+    box-shadow:0 14px 30px rgba(20,21,15,.08);border-color:#d2cdbe;}
+  /* ホバーで左に伸びるライン（押せるのはこのカードだけ） */
+  .proj::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;z-index:4;
+    background:var(--gold);transform:scaleY(0);transform-origin:top;
+    transition:transform .35s cubic-bezier(.22,1,.36,1);}
+  .proj:hover::before{transform:scaleY(1);}
+  .proj-body{padding:26px 28px 28px;}
+  .proj-img{background:#191c1f;overflow:hidden;border-bottom:1px solid var(--rule);}
+  .proj-img img{
+    width:100%;display:block;aspect-ratio:1.8/1;object-fit:cover;object-position:center;
+    transition:transform .75s cubic-bezier(.22,1,.36,1);
+  }
+  .proj:hover .proj-img img{transform:scale(1.03);}
+  .proj h3{transition:color .25s;}
+  .proj:hover h3{color:var(--gold);}
+  .proj .sum{font-size:16.3px;line-height:1.7;color:var(--ink-soft);margin:0;max-width:36em;}
+  .proj .figures{display:flex;gap:26px;flex-wrap:wrap;margin:20px 0 0;
+    padding-top:15px;border-top:1px solid var(--rule);}
+  .proj .figures div{font-family:"JetBrains Mono",monospace;font-size:9px;
+    letter-spacing:.15em;text-transform:uppercase;color:var(--ink-faint);}
+  .proj .figures div b{display:block;font-family:"Instrument Serif",Georgia,serif;
+    font-weight:400;font-size:23px;letter-spacing:-0.022em;color:var(--ink);
+    text-transform:none;margin-top:3px;}
+  .proj .go{display:inline-flex;align-items:center;gap:9px;margin-top:18px;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.15em;
+    text-transform:uppercase;color:var(--gold);}
+  .proj .go i{font-style:normal;transition:transform .28s cubic-bezier(.22,1,.36,1);}
+  .proj:hover .go i{transform:translateX(6px);}
+
+  .rv{opacity:0;transform:translateY(16px);
+    transition:opacity .6s ease,transform .6s cubic-bezier(.22,1,.36,1);}
+  .rv.in{opacity:1;transform:none;}
+
+  @media (max-width:760px){
+    /* 画面の端の余白を詰める。32pxのままだと本文が読めないほど細くなる */
+    .wrap{padding:0 20px;}
+    .cover-in{padding:0 20px 38px;}
+    .cover-foot{margin:0 20px;gap:20px;}
+    .credit{padding:11px 20px;}
+
+    .cover img{object-position:55% 14%;}
+    .cover h1{font-size:clamp(42px,12vw,70px);}
+    .cover .tagline{font-size:16.5px;}
+    .cue{display:none;}
+
+    .sec-grid{grid-template-columns:1fr;gap:16px;}
+    h2{position:static;}
+    h2 b{font-size:26px;}
+    section{padding:34px 0;}
+
+    /* カードの内側も詰める */
+    .about,#about .sec-grid > div,#contact .sec-grid > div,
+    .sec-grid > .meta,.sec-grid > ul.plain{padding:24px 22px;}
+    .entry{padding:22px 20px;}
+    .proj-body{padding:22px 20px 24px;}
+    .about p{font-size:17.4px;line-height:1.72;}
+    .about .drop::first-letter{font-size:54px;padding:6px 10px 0 0;}
+
+    .meta{grid-template-columns:1fr;gap:2px 0;}
+    .meta dd{margin-bottom:14px;}
+    .proj .figures{gap:16px;}
+    .proj .figures div b{font-size:20px;}
+
+    /* 指で押しやすい大きさに */
+    .cta{padding:14px 22px;margin-right:8px;}
+  }
+  @media (max-width:420px){
+    .wrap{padding:0 16px;}
+    .cover-in{padding:0 16px 34px;}
+    .cover-foot{margin:0 16px;}
+    .about,#about .sec-grid > div,#contact .sec-grid > div,
+    .sec-grid > .meta,.sec-grid > ul.plain{padding:22px 18px;}
+    .entry{padding:20px 17px;}
+    .proj-body{padding:20px 17px 22px;}
+    .cta{display:block;text-align:center;margin-right:0;}
+    .kv{font-size:10.5px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+    .rv{opacity:1;transform:none;}
+    .eyebrow,.cover h1,.cover .tagline,.cover-foot{opacity:1;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= COVER ================= -->
+<div class="cover">
+  <img src="profile.jpg" alt="Takuhiro Nishimura speaking at a symposium">
+  <div class="scrim"></div>
+
+  <div class="cover-top">
+    <span>Takuhiro Nishimura — Portfolio</span>
+    <span><a href="mailto:tanishimura@ucsd.edu">Email</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/takuhiro-nishimura-88a45538b/" target="_blank" rel="noopener">LinkedIn</a> &nbsp;·&nbsp; <a href="https://github.com/takuhironishimura" target="_blank" rel="noopener">GitHub</a></span>
+  </div>
+
+  <div class="cover-in">
+    <p class="eyebrow">Cognitive &amp; Behavioral Neuroscience · UC San Diego</p>
+    <h1>Takuhiro<em>Nishimura</em></h1>
+    <p class="tagline">
+      I want to bring what we know about the brain into how people are actually taught.
+      Right now that means developmental research in the lab, and teaching outside it.
+    </p>
+  </div>
+
+  <div class="cover-foot">
+    <div class="kv"><span>Class of</span><b>2029</b></div>
+    <div class="kv"><span>GPA</span><b class="hot">4.0</b></div>
+    <div class="kv"><span>Merit scholarships</span><b class="hot">$40K / year</b></div>
+    <div class="kv"><span>Based in</span><b>San Diego / Tokyo</b></div>
+    <span class="cue">Scroll <i>↓</i></span>
+  </div>
+</div>
+<p class="credit">Presenting at a research symposium, 2026</p>
+
+<!-- ================= CONTENT ================= -->
+<main class="wrap">
+
+  <section id="about" class="rv">
+    <div class="sec-grid">
+      <h2>01<b>About</b></h2>
+      <div>
+        <p class="lead drop">
+          I'm an international student from Japan, entering my second year at UC San Diego. My
+          interests sit where cognitive science meets education. In the lab I do developmental
+          research — recording and coding infant behaviour, and learning how careful data collection
+          actually gets done. Outside it, I've taught English to high school students in Tokyo, I
+          run cognitive exercise sessions for people living with Alzheimer's disease in San Diego,
+          and I work with Minna no Ryugakubu helping Japanese students find a route to studying
+          abroad.
+        </p>
+        <p class="lead">
+          The thread connecting them is a question I keep returning to:
+          <span class="em">what makes learning stick, and what helps people keep the abilities they
+          have?</span> I'm majoring in Cognitive and Behavioral Neuroscience with a minor in
+          Education Studies so I can work on it from both directions — the mechanism and the
+          practice.
+        </p>
+        <p class="lead">
+          What I want to do with that is apply research on the brain to how people are actually
+          taught, and use it to raise the quality of education — and to narrow the gap in who gets
+          access to a good one. More broadly, I'm interested in applying what we learn about the
+          brain to society itself. <span class="em">Education is where I want to start, not where I
+          intend to stop.</span>
+        </p>
+        <a class="more" href="how-i-got-here.html">Read the longer version <i>&rarr;</i></a>
+        <p class="tags">
+          Interests — Cognitive neuroscience · Developmental research · Learning sciences ·
+          Educational equity · Education &amp; EdTech · Psychology
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="education" class="rv">
+    <div class="sec-grid">
+      <h2>02<b>Education</b></h2>
+      <div>
+        <div class="entry">
+          <div class="entry-head">
+            <h3>University of California, San Diego</h3>
+            <span class="when">Expected Jun 2029</span>
+          </div>
+          <p class="org">B.S. Cognitive and Behavioral Neuroscience · Minor in Education Studies</p>
+          <dl class="meta">
+            <dt>GPA</dt><dd><strong>4.0</strong></dd>
+            <dt>Honors</dt><dd>Provost Honors — Fall 2025, Winter 2026</dd>
+            <dt>Coursework</dt><dd>Calculus · Research Methods · Statistical Analysis · The Cell · Sports Analytics</dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="research" class="rv">
+    <div class="sec-grid">
+      <h2>03<b>Research</b></h2>
+      <div>
+        <div class="entry">
+          <div class="entry-head">
+            <h3>Summer Research Intern</h3><span class="when">Jun – Sep 2026</span>
+          </div>
+          <p class="org">Minagawa Lab, Keio University — Tokyo, Japan</p>
+          <ul>
+            <li>Support data analysis for developmental studies, including video coding and behavioral analysis of infants.</li>
+            <li>Participate in graduate-level seminars covering advanced topics in cognitive science.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="entry-head">
+            <h3>Undergraduate Research Assistant</h3><span class="when">Feb 2026 – Present</span>
+          </div>
+          <p class="org">Chiba Lab, UC San Diego</p>
+          <ul>
+            <li>Set up cameras and microphones to ensure reliable data capture during research camps.</li>
+            <li>Labeled and organized video data for the HECD project.</li>
+            <li>Assisted with on-site data collection and day-to-day research operations.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="rv">
+    <div class="sec-grid">
+      <h2>04<b>Projects</b></h2>
+      <div>
+        <a class="proj" href="project-brain-model.html">
+          <div class="proj-img">
+            <img src="viewer-brain-2.png" alt="The 3D brain model with the cortex made translucent, revealing the thalamus, caudate, putamen, hippocampus, ventricles, brainstem and cerebellum in colour">
+          </div>
+          <div class="proj-body">
+          <div class="entry-head">
+            <h3>Brain 3D Model</h3><span class="when">Independent · 2026</span>
+          </div>
+          <p class="org">Python · FreeSurfer (fsaverage) · marching cubes · Three.js</p>
+          <p class="sum">
+            Twenty-five brain structures reconstructed from a standard template as individual meshes
+            in one 6.85 MB file, with a browser viewer for rotating, slicing and querying them.
+            Measured volumes run up to 52% above manual-tracing references — I left them uncorrected
+            and documented the gap rather than tuning the model to look right.
+          </p>
+          <div class="figures">
+            <div>Structures<b>25</b></div>
+            <div>Faces<b>269,936</b></div>
+            <div>Size<b>6.85 MB</b></div>
+            <div>Viewer<b>~60 fps</b></div>
+          </div>
+          <span class="go">Read the full write-up <i>&rarr;</i></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience" class="rv">
+    <div class="sec-grid">
+      <h2>05<b>Experience</b></h2>
+      <div>
+        <div class="entry">
+          <div class="entry-head">
+            <h3>Volunteer</h3><span class="when">Apr 2026 – Present</span>
+          </div>
+          <p class="org">Brain Exercise Initiative — San Diego, CA</p>
+          <ul>
+            <li>Lead cognitive exercise sessions for people living with Alzheimer's disease, aimed at supporting memory and mental sharpness.</li>
+            <li>Facilitate simple math and reading activities that keep participants engaged and active.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="entry-head">
+            <h3>English Instructor</h3><span class="when">Mar – Sep 2025</span>
+          </div>
+          <p class="org">Rinkai Seminar — Japan</p>
+          <ul>
+            <li>Taught English to Japanese high school students at a major exam-preparation academy.</li>
+            <li>Built lesson plans and adapted teaching methods to a wide range of student needs.</li>
+            <li>Sharpened public speaking and classroom management through weekly instruction.</li>
+          </ul>
+        </div>
+        <div class="entry">
+          <div class="entry-head">
+            <h3>Vice-Captain, Player-Manager &amp; Coach</h3><span class="when">Apr 2019 – Sep 2025</span>
+          </div>
+          <p class="org">Baseball Club — Japan</p>
+          <ul>
+            <li>Helped lead the team to the metropolitan tournament — the school's best result in five years.</li>
+            <li>Ran team strategy discussions and kept teammates motivated through a long season.</li>
+            <li>Trained daily, including 200+ practice swings at home.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills" class="rv">
+    <div class="sec-grid">
+      <h2>06<b>Skills</b></h2>
+      <dl class="meta">
+        <dt>Languages</dt><dd>Japanese (native) · English (professional working proficiency)</dd>
+        <dt>Programming</dt><dd>Python — Pandas, NumPy</dd>
+        <dt>Research</dt><dd>Video coding · Behavioral observation · Data organization · Statistical analysis</dd>
+        <dt>Tools</dt><dd>Google Workspace · Microsoft Office</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section id="honors" class="rv">
+    <div class="sec-grid">
+      <h2>07<b>Honors</b></h2>
+      <ul class="plain">
+        <li><b>Shinohara Foundation Scholarship</b> — $35,000 / year, merit-based</li>
+        <li><b>UCSD Triton Scholars Award</b> — $5,000 / year, merit-based</li>
+        <li><b>Provost Honors</b> — Fall 2025, Winter 2026</li>
+        <li><b>2nd place, academic excellence award</b> — out of 400 students, high school</li>
+        <li><b>Perfect attendance award</b> — high school</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="contact" class="rv">
+    <div class="sec-grid">
+      <h2>08<b>Contact</b></h2>
+      <div>
+        <p class="lead">
+          I'm looking for research and internship opportunities in cognitive science,
+          developmental research, and education. If that's your world, I'd like to hear from you.
+        </p>
+        <a class="cta" href="mailto:tanishimura@ucsd.edu">tanishimura@ucsd.edu</a>
+        <a class="cta" href="https://www.linkedin.com/in/takuhiro-nishimura-88a45538b/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="cta" href="https://github.com/takuhironishimura" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2026 Takuhiro Nishimura · San Diego, CA</footer>
+</main>
+
+<script>
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
+  },{rootMargin:'0px 0px -10% 0px',threshold:.05});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+} else {
+  document.querySelectorAll('.rv').forEach(function(el){el.classList.add('in');});
+}
+</script>
+</body>
+</html>

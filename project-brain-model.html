@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brain 3D Model — Takuhiro Nishimura</title>
+<meta name="description" content="An anatomically accurate 3D model of the human brain with an in-browser viewer, reconstructed from the FreeSurfer fsaverage template.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Sans+3:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#efece5;
+    --card:#fffefb;
+    --ink:#14150f;
+    --ink-soft:#4f5148;
+    --ink-faint:#8b8d84;
+    --rule:#e0ddd3;
+    --gold:#c98a2e;
+    --deep:#0f100c;
+    --warn:#b4552c;
+    --max:900px;
+    --r:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Source Sans 3",-apple-system,BlinkMacSystemFont,sans-serif;
+    font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;}
+  a{color:var(--gold);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 30px;}
+  .mono{font-family:"JetBrains Mono",monospace;}
+
+  /* ============ top bar ============ */
+  .bar{
+    position:sticky;top:0;z-index:20;background:rgba(239,236,229,.9);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--rule);
+  }
+  .bar-in{max-width:var(--max);margin:0 auto;padding:12px 30px;
+    display:flex;justify-content:space-between;align-items:center;gap:16px;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;}
+  .bar a{color:var(--ink-soft);}
+  .bar a:hover{color:var(--gold);text-decoration:none;}
+  .bar .back i{font-style:normal;display:inline-block;transition:transform .25s;}
+  .bar .back:hover i{transform:translateX(-4px);}
+
+  /* ============ hero ============ */
+  header{padding:64px 0 0;}
+  .kicker{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold);margin:0 0 20px;}
+  h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+    font-size:clamp(40px,6.4vw,74px);line-height:.98;margin:0 0 22px;
+    letter-spacing:-0.026em;}
+  .lede{font-size:19.5px;line-height:1.55;color:var(--ink-soft);max-width:33em;margin:0;}
+  .lede b{color:var(--ink);font-weight:600;}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:38px 0 0;}
+  .stat{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+    padding:18px 20px;}
+  .stat span{display:block;font-family:"JetBrains Mono",monospace;font-size:9px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px;}
+  .stat b{display:block;font-family:"Instrument Serif",Georgia,serif;font-weight:400;
+    font-size:31px;line-height:.95;letter-spacing:-0.028em;color:var(--gold);}
+
+  /* warning */
+  .warn{
+    margin:26px 0 0;background:#fbf3ec;border:1px solid #e6cdb8;
+    border-left:3px solid var(--warn);border-radius:8px;padding:17px 20px;
+    font-size:15px;color:#6b4227;
+  }
+  .warn b{display:block;font-family:"JetBrains Mono",monospace;font-size:9.5px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--warn);margin-bottom:6px;}
+
+  /* screenshot slot */
+  .shot{
+    margin:34px 0 0;background:var(--deep);border-radius:var(--r);overflow:hidden;
+    border:1px solid var(--rule);
+  }
+  .shot img{width:100%;display:block;}
+  .shot .empty{
+    aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:8px;color:#5c5f55;text-align:center;padding:24px;
+    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;line-height:1.9;
+  }
+  .shot-cap{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--ink-faint);margin:10px 0 0;}
+
+  /* ============ sections ============ */
+  section{padding:52px 0;border-top:1px solid var(--rule);}
+  section:first-of-type{margin-top:56px;}
+  h2{font-family:"JetBrains Mono",monospace;font-size:10.5px;font-weight:500;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--gold);
+    margin:0 0 12px;display:flex;align-items:center;gap:14px;}
+  h2::after{content:"";flex:1;height:1px;background:var(--rule);}
+  h3.big{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:30px;
+    letter-spacing:-0.018em;line-height:1.15;margin:0 0 20px;}
+  p{margin:0 0 16px;color:var(--ink-soft);max-width:38em;}
+  p:last-child{margin-bottom:0;}
+  p .em{color:var(--ink);font-weight:600;}
+
+  ul.body{margin:0 0 16px;padding-left:19px;color:var(--ink-soft);max-width:38em;}
+  ul.body li{margin-bottom:8px;}
+  ul.body li::marker{color:var(--gold);}
+  ul.body b{color:var(--ink);font-weight:600;}
+
+  /* numbered pipeline */
+  ol.pipe{list-style:none;counter-reset:s;margin:0;padding:0;max-width:40em;}
+  ol.pipe li{counter-increment:s;position:relative;padding:0 0 20px 52px;}
+  ol.pipe li:last-child{padding-bottom:0;}
+  ol.pipe li::before{
+    content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;
+    font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--gold);
+    border:1px solid rgba(201,138,46,.4);border-radius:50%;
+    width:30px;height:30px;display:flex;align-items:center;justify-content:center;
+  }
+  ol.pipe li::after{content:"";position:absolute;left:15px;top:34px;bottom:4px;
+    width:1px;background:var(--rule);}
+  ol.pipe li:last-child::after{display:none;}
+  ol.pipe b{display:block;color:var(--ink);font-weight:600;margin-bottom:1px;}
+  ol.pipe span{color:var(--ink-soft);font-size:15px;}
+  ol.pipe code{font-family:"JetBrains Mono",monospace;font-size:12.5px;
+    background:var(--card);border:1px solid var(--rule);padding:1px 5px;border-radius:3px;}
+
+  /* table */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:var(--r);
+    background:var(--card);margin-top:8px;}
+  table{border-collapse:collapse;width:100%;font-size:14px;min-width:600px;}
+  th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--rule);white-space:nowrap;}
+  th{font-family:"JetBrains Mono",monospace;font-size:9px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);font-weight:500;
+    background:#faf8f3;position:sticky;top:0;}
+  td{color:var(--ink-soft);}
+  td.name{color:var(--ink);}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tr:last-child td{border-bottom:none;}
+  tr.total td{font-weight:600;color:var(--ink);background:#faf8f3;}
+  .d-hi{color:var(--warn);font-weight:600;}
+  .d-ok{color:var(--ink-faint);}
+
+  /* callout card */
+  .note{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);
+    padding:26px 28px;margin-top:8px;}
+  .note h4{font-family:"Instrument Serif",Georgia,serif;font-weight:400;font-size:21px;
+    margin:0 0 9px;line-height:1.25;}
+  .note p{margin-bottom:0;max-width:none;font-size:15.4px;}
+  .note + .note{margin-top:12px;}
+
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+
+  .cta{display:inline-block;margin:20px 10px 0 0;padding:13px 24px;
+    border:1px solid var(--ink);color:var(--ink);border-radius:99px;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;transition:.22s;}
+  .cta:hover{background:var(--ink);color:var(--card);text-decoration:none;}
+  .cta.gold{border-color:var(--gold);color:var(--gold);}
+  .cta.gold:hover{background:var(--gold);color:var(--card);}
+
+  .refs{font-size:14px;color:var(--ink-faint);max-width:44em;}
+  .refs li{margin-bottom:7px;}
+
+  footer{padding:34px 0 84px;border-top:1px solid var(--rule);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-faint);}
+
+  .rv{opacity:0;transform:translateY(16px);
+    transition:opacity .6s ease,transform .6s cubic-bezier(.22,1,.36,1);}
+  .rv.in{opacity:1;transform:none;}
+
+  @media (max-width:760px){
+    header{padding:40px 0 0;}
+    .lede{font-size:17px;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .grid2{grid-template-columns:1fr;}
+    section{padding:38px 0;}
+    h3.big{font-size:25px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+    .rv{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <a class="back" href="design-g4-cards.html"><i>←</i> &nbsp;Takuhiro Nishimura — Portfolio</a>
+    <a href="https://github.com/takuhironishimura/Brain_Model" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ================= HERO ================= -->
+  <header>
+    <p class="kicker">Project 01 · Independent · 2026</p>
+    <h1>Brain 3D Model</h1>
+    <p class="lede">
+      <b>An anatomically accurate 3D model of the human brain, and a viewer that opens it in any browser.</b>
+      Twenty-five structures reconstructed from the FreeSurfer <span class="mono">fsaverage</span> template —
+      each kept as its own mesh, so you can pull the brain apart, slice it, and read the volume of anything you click.
+    </p>
+
+    <div class="stats">
+      <div class="stat"><span>Structures</span><b>25</b></div>
+      <div class="stat"><span>Faces</span><b>269,936</b></div>
+      <div class="stat"><span>File size</span><b>6.85 MB</b></div>
+      <div class="stat"><span>Viewer</span><b>~60 fps</b></div>
+    </div>
+
+    <div class="warn">
+      <b>Read this first</b>
+      This is an <strong>average reference brain</strong>, not any individual's. It cannot be used for
+      diagnosis, surgical planning, or quantitative measurement. That constraint shaped every decision below.
+    </div>
+
+    <!-- スクリーンショット。差し替えるときは viewer-shot.png を
+         同じフォルダで置き換えるだけでOK。追加の画像はこのブロックを複製して使う。 -->
+    <div class="shot">
+      <img src="viewer-shot.png"
+           alt="The Brain 3D Viewer with the cortex made translucent, revealing the thalamus, caudate, putamen, hippocampus, amygdala, ventricles and cerebellum in colour">
+    </div>
+    <p class="shot-cap">
+      The viewer — cortex made translucent to expose the subcortical nuclei, cerebellum and ventricles.
+      Structure tree on the left, live readout on the right.
+    </p>
+  </header>
+
+  <!-- ================= WHY ================= -->
+  <section class="rv">
+    <h2>Why</h2>
+    <h3 class="big">I wanted to see the structures I was reading about.</h3>
+    <p>
+      Textbook diagrams show the brain in flat slices, one plane at a time. Studying cognitive
+      neuroscience, I kept running into structures — the pallidum, the ventral diencephalon, the
+      inferior horn of the lateral ventricle — that I could name but could not picture in relation
+      to each other. So I built the thing I wanted to look at.
+    </p>
+    <p>
+      The requirement I set was that it had to be <span class="em">honest</span>. Plenty of brain
+      renders look impressive and quietly distort anatomy to get there. I wanted every number in the
+      model to be traceable to a published source, and every place it disagrees with the literature
+      to be written down rather than smoothed over.
+    </p>
+  </section>
+
+  <!-- ================= WHAT ================= -->
+  <section class="rv">
+    <h2>What it does</h2>
+    <div class="grid2">
+      <div class="note">
+        <h4>Take it apart</h4>
+        <p>A structure tree groups all 25 meshes by category. Toggle visibility, set opacity per
+        structure, or make the cortex translucent in one click to expose everything underneath.</p>
+      </div>
+      <div class="note">
+        <h4>Cut through it</h4>
+        <p>Three orthogonal clipping planes — sagittal, coronal, axial — with a position slider and
+        direction flip. Cut faces are filled with each structure's own colour, so a section reads
+        like an atlas plate rather than a hollow shell.</p>
+      </div>
+      <div class="note">
+        <h4>Ask what something is</h4>
+        <p>Click any structure and it highlights, then reports its English and Japanese name,
+        category, measured volume in mm³, and how far that volume sits from published reference
+        ranges.</p>
+      </div>
+      <div class="note">
+        <h4>Read it in two languages</h4>
+        <p>A Japanese / English toggle switches the entire interface and every anatomical name live,
+        without losing the current view. Six anatomically correct preset views, a millimetre grid,
+        world-anchored L/R labels, and PNG export with optional transparency.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= HOW ================= -->
+  <section class="rv">
+    <h2>How it was built</h2>
+    <h3 class="big">From voxels to a single 6.85 MB file.</h3>
+    <p>
+      Both the cortical surfaces and the deep structures come from the <span class="em">same fsaverage
+      subject</span> — the pial surfaces and the <span class="mono">aseg</span> segmentation. Because
+      they share a subject, they share a coordinate space, and they align with no spatial registration
+      step at all. That single decision removed an entire class of alignment error.
+    </p>
+    <ol class="pipe">
+      <li><b>Binary mask per label</b><span>One mask for each FreeSurfer aseg label ID.</span></li>
+      <li><b>Gaussian smoothing</b><span>σ = 0.5 voxel, to take the staircase off voxel boundaries.</span></li>
+      <li><b>Marching cubes</b><span>Isosurface extraction with the level <b style="display:inline">fixed at 0.5</b> — never tuned per structure, because tuning it per structure is how you quietly reshape anatomy to taste.</span></li>
+      <li><b>Taubin smoothing &amp; cleanup</b><span>Five iterations with shrink correction, then connected-component removal of anything under 1% of the largest piece.</span></li>
+      <li><b>Per-structure decimation</b><span>60,000 faces per cortical hemisphere; 22,000 per cerebellar hemisphere to preserve foliation; 5,000 for subcortical nuclei; 12,000 per lateral ventricle to keep the inferior horn; the third and fourth ventricles left undecimated because they are too thin to survive it.</span></li>
+      <li><b>Export</b><span>Convert to surface RAS in millimetres via <code>vox2ras-tkr</code>, write one GLB with normals and 25 named meshes.</span></li>
+    </ol>
+    <p style="margin-top:22px;">
+      The whole pipeline is one script. A clean machine goes from nothing to a finished model in
+      about five minutes, including the automatic fsaverage download.
+    </p>
+  </section>
+
+  <!-- ================= STRUCTURES ================= -->
+  <section class="rv">
+    <h2>The 25 structures</h2>
+    <p>
+      Volumes are <span class="em">as measured, uncorrected</span>. Reference ranges are representative
+      adult normal values from MRI manual-tracing studies; "diff" is the distance from the midpoint
+      of that range.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Structure</th><th>Label</th><th class="num">Faces</th>
+            <th class="num">Measured (mm³)</th><th class="num">Reference (mm³)</th><th class="num">Diff</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="name">Cerebral cortex — L</td><td>lh.pial</td><td class="num">60,000</td><td class="num">76,433 mm² area</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="name">Cerebral cortex — R</td><td>rh.pial</td><td class="num">60,000</td><td class="num">76,361 mm² area</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="name">Thalamus — L</td><td>aseg 10</td><td class="num">5,000</td><td class="num">8,610</td><td class="num">6,000–8,000</td><td class="num d-hi">+23.0%</td></tr>
+          <tr><td class="name">Thalamus — R</td><td>aseg 49</td><td class="num">5,000</td><td class="num">8,589</td><td class="num">6,000–8,000</td><td class="num d-hi">+22.7%</td></tr>
+          <tr><td class="name">Caudate — L</td><td>aseg 11</td><td class="num">5,000</td><td class="num">3,627</td><td class="num">3,000–4,000</td><td class="num d-ok">+3.6%</td></tr>
+          <tr><td class="name">Caudate — R</td><td>aseg 50</td><td class="num">5,000</td><td class="num">3,852</td><td class="num">3,000–4,000</td><td class="num d-ok">+10.1%</td></tr>
+          <tr><td class="name">Putamen — L</td><td>aseg 12</td><td class="num">5,000</td><td class="num">7,242</td><td class="num">4,000–5,500</td><td class="num d-hi">+52.5%</td></tr>
+          <tr><td class="name">Putamen — R</td><td>aseg 51</td><td class="num">5,000</td><td class="num">6,872</td><td class="num">4,000–5,500</td><td class="num d-hi">+44.7%</td></tr>
+          <tr><td class="name">Pallidum — L</td><td>aseg 13</td><td class="num">2,776</td><td class="num">1,765</td><td class="num">1,500–2,200</td><td class="num d-ok">−4.6%</td></tr>
+          <tr><td class="name">Pallidum — R</td><td>aseg 52</td><td class="num">2,792</td><td class="num">1,804</td><td class="num">1,500–2,200</td><td class="num d-ok">−2.5%</td></tr>
+          <tr><td class="name">Hippocampus — L</td><td>aseg 17</td><td class="num">5,000</td><td class="num">5,165</td><td class="num">3,000–4,500</td><td class="num d-hi">+37.7%</td></tr>
+          <tr><td class="name">Hippocampus — R</td><td>aseg 53</td><td class="num">5,000</td><td class="num">5,387</td><td class="num">3,000–4,500</td><td class="num d-hi">+43.7%</td></tr>
+          <tr><td class="name">Amygdala — L</td><td>aseg 18</td><td class="num">2,856</td><td class="num">1,941</td><td class="num">1,200–1,900</td><td class="num d-hi">+25.2%</td></tr>
+          <tr><td class="name">Amygdala — R</td><td>aseg 54</td><td class="num">3,132</td><td class="num">2,228</td><td class="num">1,200–1,900</td><td class="num d-hi">+43.7%</td></tr>
+          <tr><td class="name">Accumbens — L</td><td>aseg 26</td><td class="num">1,712</td><td class="num">778</td><td class="num">400–700</td><td class="num d-hi">+41.5%</td></tr>
+          <tr><td class="name">Accumbens — R</td><td>aseg 58</td><td class="num">1,672</td><td class="num">757</td><td class="num">400–700</td><td class="num d-hi">+37.6%</td></tr>
+          <tr><td class="name">Cerebellum — L</td><td>aseg 8+7</td><td class="num">22,000</td><td class="num">77,618</td><td class="num">55,000–75,000</td><td class="num d-hi">+19.4%</td></tr>
+          <tr><td class="name">Cerebellum — R</td><td>aseg 47+46</td><td class="num">22,000</td><td class="num">77,851</td><td class="num">55,000–75,000</td><td class="num d-hi">+19.8%</td></tr>
+          <tr><td class="name">Brainstem</td><td>aseg 16</td><td class="num">8,000</td><td class="num">26,629</td><td class="num">20,000–35,000</td><td class="num d-ok">−3.2%</td></tr>
+          <tr><td class="name">Ventral diencephalon — L</td><td>aseg 28</td><td class="num">6,000</td><td class="num">5,142</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="name">Ventral diencephalon — R</td><td>aseg 60</td><td class="num">6,000</td><td class="num">5,076</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="name">Lateral ventricle — L</td><td>aseg 4+5</td><td class="num">12,000</td><td class="num">22,020</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="name">Lateral ventricle — R</td><td>aseg 43+44</td><td class="num">12,000</td><td class="num">20,176</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="name">Third ventricle</td><td>aseg 14</td><td class="num">3,244</td><td class="num">1,941</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr><td class="name">Fourth ventricle</td><td>aseg 15</td><td class="num">3,752</td><td class="num">2,237</td><td class="num">—</td><td class="num">—</td></tr>
+          <tr class="total"><td>Total</td><td>25 structures</td><td class="num">269,936</td><td class="num"></td><td class="num"></td><td class="num"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;font-size:14.5px;">
+      Machine-readable equivalents — colour, centroid, reference source — live in
+      <span class="mono">structures.json</span>.
+    </p>
+  </section>
+
+  <!-- ================= VERIFICATION ================= -->
+  <section class="rv">
+    <h2>Verification</h2>
+    <h3 class="big">Every claim above was checked by a script, not by eye.</h3>
+    <ul class="body">
+      <li><b>Orientation</b> — every structure with x&lt;0 is on the left and x&gt;0 on the right, following the RAS convention. No silent left–right swap, which is the single most common and most embarrassing failure in this kind of work.</li>
+      <li><b>Left–right symmetry</b> — paired structures differ by ≤10% in volume. The amygdala is the one exception at 12.9%, an artefact of averaging many brains together.</li>
+      <li><b>Scale</b> — 139 mm left-to-right, 174 mm front-to-back, 149 mm top-to-bottom. Real size.</li>
+      <li><b>Interpenetration</b> — adjacent structures overlap by ≤0.1 mm, and the subcortical nuclei poke through the cortex 0% of the time.</li>
+      <li><b>Budget</b> — 269,936 faces against a 300,000 target; 6.85 MB against a 50 MB target.</li>
+      <li><b>Viewer</b> — driven by a headless browser: all three section planes render correctly, caps stay intact, roughly 60 fps, no console errors.</li>
+    </ul>
+  </section>
+
+  <!-- ================= LIMITATIONS ================= -->
+  <section class="rv">
+    <h2>What I did not fix</h2>
+    <h3 class="big">The volumes are wrong, on purpose.</h3>
+    <p>
+      Measured volumes run systematically larger than manual-tracing references — putamen by roughly
+      50%, hippocampus by 40%, thalamus by 23%. I could have closed that gap by shrinking the masks
+      or tuning the isosurface threshold, and the table would have looked much better.
+    </p>
+    <p>
+      I didn't, for two reasons. The difference is not an error — it comes from an averaged brain
+      having blurred boundaries, and from FreeSurfer's <span class="mono">aseg</span> defining
+      structure boundaries by a different protocol than manual tracing. And correcting it would
+      distort the anatomical shape, which is the one thing the model exists to represent.
+      <span class="em">So the numbers are published as measured, with the reference value and the
+      difference beside them.</span>
+    </p>
+    <div class="note" style="margin-top:22px;">
+      <h4>The other things it can't do</h4>
+      <p style="margin-bottom:10px;">Stated because a model is only useful if you know where it stops.</p>
+      <ul class="body" style="margin-bottom:0;">
+        <li>It is an <b>average brain</b> built from about 40 subjects. It has no individual shape, asymmetry, or pathology.</li>
+        <li><b>Not for quantitative volumetry</b>, given the systematic difference above.</li>
+        <li>The <b>brainstem is a single label</b> — midbrain, pons and medulla are not distinguished.</li>
+        <li>The <b>cerebellar vermis is not separated</b> from the hemispheres.</li>
+        <li><b>Not for clinical use.</b> No diagnosis, no surgical planning.</li>
+        <li>Section caps can look slightly ragged on non-watertight structures, and clipping planes are limited to the three orthogonal directions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= DECISIONS ================= -->
+  <section class="rv">
+    <h2>Decisions worth defending</h2>
+    <div class="note">
+      <h4>Why fsaverage aseg instead of Harvard-Oxford</h4>
+      <p>
+        I tested Harvard-Oxford first. It has no cerebellar parcellation, and it lives in FSL's
+        MNI152 space — a different space from the fsaverage cortical surface — which left a
+        few-millimetre misalignment. The aseg segmentation covers subcortical structures, cerebellum,
+        brainstem and ventricles, and shares a coordinate space with the pial surfaces. A
+        single-subject aseg would sit closer to published volumes, but it would break alignment with
+        the fsaverage surface, which defeats the purpose.
+      </p>
+    </div>
+    <div class="note">
+      <h4>Why tkrRAS as the coordinate system</h4>
+      <p>
+        The pial surface is already defined in tkrRAS, and aseg converts into it with
+        <span class="mono">vox2ras-tkr</span>. The two overlay with no transform, so there is nowhere
+        for a registration error to hide.
+      </p>
+    </div>
+    <div class="note">
+      <h4>Why the isosurface level never varies</h4>
+      <p>
+        Marching cubes runs at a level fixed to 0.5 for every structure. Varying it per structure is
+        an easy way to make individual volumes land closer to the literature — and an easy way to
+        stop being able to explain what the model actually represents.
+      </p>
+    </div>
+  </section>
+
+  <!-- ================= NEXT ================= -->
+  <section class="rv">
+    <h2>What's next</h2>
+    <ul class="body">
+      <li><b>Desikan-Killiany parcellation</b> — colour and label the cortex by its 34 regions using <span class="mono">?h.aparc.annot</span>.</li>
+      <li><b>Oblique clipping planes</b> — a free-normal cutting plane in addition to the three orthogonal ones.</li>
+      <li><b>MRI texture on cut faces</b> — paint T1 slice images onto the section planes.</li>
+      <li><b>Brainstem subdivision</b> and <b>cerebellar detail</b>, via FreeSurfer Brainstem Substructures and the SUIT atlas — license permitting.</li>
+      <li><b>3D printing</b> — make each structure watertight, export STL, enforce a minimum wall thickness.</li>
+    </ul>
+  </section>
+
+  <!-- ================= DATA ================= -->
+  <section class="rv">
+    <h2>Data, license &amp; references</h2>
+    <p>
+      Built from FreeSurfer's fsaverage subject — <span class="mono">{lh,rh}.pial</span> for the
+      cortical surfaces and <span class="mono">aseg.mgz</span> for everything deep. Distributed under
+      the FreeSurfer Software License: free for research use, not for clinical use. This model is a
+      derivative work and carries the required attribution. The AAL atlas is deliberately not used,
+      as its terms would complicate publication. Three.js is MIT-licensed.
+    </p>
+    <ul class="refs">
+      <li>Fischl B, Sereno MI, Tootell RBH, Dale AM. High-resolution intersubject averaging and a coordinate system for the cortical surface. <em>Human Brain Mapping</em> 8:272–284 (1999).</li>
+      <li>Fischl B, et al. Whole brain segmentation: automated labeling of neuroanatomical structures. <em>Neuron</em> 33:341–355 (2002).</li>
+      <li>Desikan RS, et al. An automated labeling system for subdividing the human cerebral cortex. <em>NeuroImage</em> 31:968–980 (2006).</li>
+      <li>Fonov V, et al. Unbiased average age-appropriate atlases for pediatric studies. <em>NeuroImage</em> (2011).</li>
+    </ul>
+
+    <a class="cta gold" href="https://github.com/takuhironishimura/Brain_Model" target="_blank" rel="noopener">View on GitHub ↗</a>
+    <a class="cta" href="design-g4-cards.html">← Back to portfolio</a>
+  </section>
+
+  <footer>
+    <span>© 2026 Takuhiro Nishimura</span>
+    <span>San Diego, CA · Tokyo, JP</span>
+  </footer>
+</div>
+
+<script>
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} });
+  },{rootMargin:'0px 0px -10% 0px',threshold:.05});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el);});
+} else { document.querySelectorAll('.rv').forEach(function(el){el.classList.add('in');}); }
+</script>
+</body>
+</html>
